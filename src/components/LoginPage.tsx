@@ -2,6 +2,7 @@
 
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import ThemeSwitcher from './ThemeSwitcher';
 import { useTheme } from '@/context/ThemeContext';
 import GroovifyLogo from './GroovifyLogo';
@@ -9,6 +10,7 @@ import GroovifyLogo from './GroovifyLogo';
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { theme } = useTheme();
+  const router = useRouter();
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -19,6 +21,10 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDevModeAccess = () => {
+    router.push('/dashboard?devMode=true');
   };
 
   // Define background and text colors based on theme
@@ -103,6 +109,19 @@ export default function LoginPage() {
               </>
             )}
           </button>
+          
+          {/* Dev Mode button - only shown in development environment */}
+          {process.env.NODE_ENV === 'development' && (
+            <button
+              onClick={handleDevModeAccess}
+              className="mt-4 flex w-full items-center justify-center rounded-full border-2 border-purple-500 py-3 px-4 text-center font-medium text-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            >
+              <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+              Access Dashboard (Dev Mode)
+            </button>
+          )}
         </div>
 
         <div className={`mt-6 text-center text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>

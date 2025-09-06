@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import { useTheme } from '@/context/ThemeContext';
 import GroovifyLogo from '@/components/GroovifyLogo';
@@ -11,9 +11,16 @@ export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { theme } = useTheme();
+  const [isDevMode, setIsDevMode] = useState(false);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    // Check if URL contains devMode parameter
+    const searchParams = new URLSearchParams(window.location.search);
+    const devMode = searchParams.get('devMode') === 'true';
+    setIsDevMode(devMode);
+    
+    // Only redirect if not in dev mode and not authenticated
+    if (status === 'unauthenticated' && !devMode) {
       router.push('/');
     }
   }, [status, router]);
@@ -93,11 +100,16 @@ export default function Dashboard() {
               className="mr-3"
             />
             <h1 className={`text-3xl font-bold ${getTextClass()}`}>Groovify Dashboard</h1>
+            {isDevMode && (
+              <span className="ml-3 rounded-full bg-purple-600 px-3 py-1 text-xs font-semibold text-white">
+                DEV MODE
+              </span>
+            )}
           </div>
           <div className="flex items-center space-x-4">
             <ThemeSwitcher />
             <button
-              onClick={() => router.push('/api/auth/signout')}
+              onClick={() => isDevMode ? router.push('/') : router.push('/api/auth/signout')}
               className={`rounded-full ${getButtonClass()} px-4 py-2 text-sm font-medium`}
             >
               Sign Out
