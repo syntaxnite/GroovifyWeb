@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #121212;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --card-background: #1e1e1e;
+}
+
+html.light {
+  --background: #ffffff;
+  --text-primary: #121212;
+  --text-secondary: #505050;
+  --card-background: #f8f8f8;
+}
+
+html.cream {
+  --background: #f5f5dc;
+  --text-primary: #333333;
+  --text-secondary: #555555;
+  --card-background: #efefd5;
+}
+
+html.dark {
+  --background: #121212;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --card-background: #1e1e1e;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
